@@ -82,7 +82,6 @@ export default {
             canvas.height = window.innerHeight;
         });
         
-        //this.players.push(Player.newPlayer(500,500));
         this.world = World.newWorld();
 
         let canvas = document.getElementById("game-canvas");
@@ -118,26 +117,21 @@ export default {
             this.players[socketId] = Player.newPlayer(this.you.spawnX, this.you.spawnY, color);
 
             this.$set(this.listData, socketId, {color, socketId});
-            //this.listData[socketId] = {color, socketId};
 
-            //Create existing players with the fetched data
             const keys = Object.keys(existingPlayers);
             const values = Object.values(existingPlayers);
             for(let i = 0; i<keys.length; i++) {
                 this.players[keys[i]] = Player.newPlayer(values[i].x, values[i].y, values[i].color);
                 this.$set(this.listData, keys[i], {color: values[i].color, socketId: keys[i]});
-                //this.listData[keys[i]] = {color: values[i].color, socketId: keys[i]};
             }
         },
         playerJoined(socketId, x, color) {
             this.players[socketId] = Player.newPlayer(x, 0, color);
             this.$set(this.listData, socketId, {color, socketId});
-            //this.listData[socketId] = {color, socketId}; 
         },
         playerLeft(socketId) {
             delete this.players[socketId];
             this.$delete(this.listData, socketId);
-            //delete this.listData[socketId];
         },
         playerPositionUpdate(socketId, x, y) {
             if(this.players[socketId]) {
