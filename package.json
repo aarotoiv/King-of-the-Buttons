@@ -1,0 +1,23 @@
+{
+  "name": "kb",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "server": "nodemon --ignore 'client/*' index.js",
+    "client": "npm run serve --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "*",
+    "concurrently": "^5.1.0",
+    "cors": "*",
+    "express": "*",
+    "morgan": "*",
+    "nodemon": "^2.0.2",
+    "socket.io": "^2.3.0"
+  }
+}
