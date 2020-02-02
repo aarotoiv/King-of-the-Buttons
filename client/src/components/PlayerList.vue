@@ -1,7 +1,7 @@
 <template>
     <div id="player-list">
         <ul id="player-list-inner">
-            <ol class="player-list-line" v-for="item in players" v-bind:key="item.socketId">
+            <ol class="player-list-line" v-for="item in players" v-bind:key="item.socketId" v-bind:class="{removed: !item.exists}">
                 <div class="player-color" v-bind:style="{background: 'rgb(' + item.color.r + ',' + item.color.g + ',' + item.color.b + ')'}"></div>
                 <span class="player-name">{{item.socketId}}</span>
             </ol>
@@ -20,14 +20,6 @@
         },
         props: {
             players: Object
-        },
-        watch: {
-            players: { 
-                immediate: true,
-                handler (val) {
-                    this.listItems = val;
-                }
-            }
         }
     }
 </script>
@@ -89,6 +81,21 @@
         float:left;
         line-height: 25px;
         color: #fff;
+    }
+    .removed {
+        animation: player-line-dispatch 0.5s ease-in-out;
+    } 
+    @keyframes player-line-dispatch {
+        from {
+            opacity: 1;
+            margin-left: 0px;
+            height: 25px;
+        } 
+        to {
+            opacity: 0;
+            margin-left: -500px;
+            height: 0px;
+        }
     }
 </style>
 

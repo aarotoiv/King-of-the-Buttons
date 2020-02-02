@@ -116,22 +116,26 @@ export default {
             this.you.socketId = socketId;
             this.players[socketId] = Player.newPlayer(this.you.spawnX, this.you.spawnY, color);
 
-            this.$set(this.listData, socketId, {color, socketId});
+            this.$set(this.listData, socketId, {color, socketId, exists:true});
 
             const keys = Object.keys(existingPlayers);
             const values = Object.values(existingPlayers);
             for(let i = 0; i<keys.length; i++) {
                 this.players[keys[i]] = Player.newPlayer(values[i].x, values[i].y, values[i].color);
-                this.$set(this.listData, keys[i], {color: values[i].color, socketId: keys[i]});
+                this.$set(this.listData, keys[i], {color: values[i].color, socketId: keys[i], exists: true});
             }
         },
         playerJoined(socketId, x, color) {
             this.players[socketId] = Player.newPlayer(x, 0, color);
-            this.$set(this.listData, socketId, {color, socketId});
+            this.$set(this.listData, socketId, {color, socketId, exists: true});
         },
         playerLeft(socketId) {
             delete this.players[socketId];
-            this.$delete(this.listData, socketId);
+            this.$set(this.listData, socketId, {...this.listData[socketId], exists: false})
+            let self = this;
+            setTimeout(function() {
+                self.$delete(self.listData, socketId);
+            }, 500);
         },
         playerPositionUpdate(socketId, x, y) {
             if(this.players[socketId]) {
