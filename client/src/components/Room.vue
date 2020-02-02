@@ -131,7 +131,7 @@ export default {
         },
         playerLeft(socketId) {
             delete this.players[socketId];
-            this.$set(this.listData, socketId, {...this.listData[socketId], exists: false})
+            this.$set(this.listData[socketId], 'exists', false);
             let self = this;
             setTimeout(function() {
                 self.$delete(self.listData, socketId);
