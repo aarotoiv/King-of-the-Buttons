@@ -33,31 +33,51 @@
 </script>
 <style scoped>
     #player-list {
+        animation: player-list-entry 0.5s ease-in-out;
         position:absolute;
-        max-width: 300px;
         /*CSS HACKS*/
         display:inline-block;
         left:10px;
         top:10px;
         z-index: 9999;
         border-right: solid 2px #fff;
-
         margin: 0;
         padding:0;
+    }
+    @keyframes player-list-entry {
+        from {
+            opacity:0;
+        }
+        to {
+            opacity:1;
+        }
     }
     #player-list-inner {
         margin:0;
         padding:10px;
+        transition: height 0.5s ease-in-out;
     }
     .player-list-line {
         margin:0;
-        padding:0;
-        animation: player-line-entry 0.5s ease-in-out;
+        animation: player-line-entry 0.3s ease-in-out;
         display:block;
+        height: 25px;
+        overflow:hidden;
+        padding-left: 0px;
+        padding-bottom: 10px;
+        padding-right: 10px;
     }
     @keyframes player-line-entry {
-        from {opacity:0; transform: translateX(-500px);}
-        to {opacity: 1; transform:translateX(0px);}
+        from {
+            opacity: 0;
+            margin-left: -500px;
+            height: 0px;
+        }
+        to {
+            opacity: 1;
+            margin-left: 0px;
+            height: 25px;
+        }
     }
     .player-color {
         width: 25px;
@@ -68,8 +88,6 @@
         padding-left: 10px;
         float:left;
         line-height: 25px;
-        padding-bottom: 10px;
-        padding-right: 10px;
         color: #fff;
     }
 </style>
