@@ -53,11 +53,15 @@ export default {
                 this.touches.bottom = false;
 
             for(let i = 0; i<buttons.positions.length; i++) {
-                if(this.x + this.scale / 2 >= buttons.positions[i].x - buttons.width / 2
-                && this.x - this.scale / 2 <= buttons.positions[i].x + buttons.width / 2
-                && this.y + this.scale / 2 >= platDims.y - buttons.height
-                && this.prevY + this.scale / 2 <= platDims.y - buttons.height) 
-                    return buttons.positions[i].id;
+                if(!buttons.positions[i].inactive) {
+                    if(this.x + this.scale / 2 >= buttons.positions[i].x - buttons.width / 2
+                    && this.x - this.scale / 2 <= buttons.positions[i].x + buttons.width / 2
+                    && this.y + this.scale / 2 >= platDims.y - buttons.height
+                    && this.prevY + this.scale / 2 <= platDims.y - buttons.height) {
+                        buttons.positions[i].inactive = true;
+                        return buttons.positions[i].id;
+                    }
+                }
             }
             return false;
         }

@@ -18,9 +18,11 @@ export default {
         this.draw = function(c) {
             c.beginPath();
             for(let i = 0; i<this.button.positions.length; i++) {
-                c.beginPath();
-                c.fillStyle = "red";
-                c.rect(this.button.positions[i].x - this.button.width / 2, this.platform.y, this.button.width, -this.button.height);
+                if(!this.button.positions[i].inactive) {
+                    c.beginPath();
+                    c.fillStyle = "red";
+                    c.rect(this.button.positions[i].x - this.button.width / 2, this.platform.y, this.button.width, -this.button.height);
+                }
             }
             c.fill();
             c.beginPath();

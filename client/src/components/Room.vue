@@ -104,7 +104,6 @@ export default {
             let self = this;
             player_arr.forEach(function(player) {
                 const buttonHit = player.checkCollisions(self.world.getPlatDims(), self.world.getButtons());
-                //const buttonHit = player.checkButtonHits(self.world.getButtons());
                 if(buttonHit) {
                     console.log(buttonHit);
                 }
