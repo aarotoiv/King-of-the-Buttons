@@ -50,6 +50,7 @@ module.exports = {
 
             socket.on('buttonHit', function(data) {
                 const hitN = buttons.spawnPoints[data.id];
+                console.log(hitN);
                 let points = -1;
                 if(hitN % 500 == 0) 
                     points += 250;

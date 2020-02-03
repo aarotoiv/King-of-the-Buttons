@@ -21,9 +21,11 @@ export default {
             top: false,
             left: false
         };
+        this.texts = [];
         //very simple drawing of a rectangle
         //x and y positions produce the center point, healthier for the brain this way(when doing calcs)
         this.draw = function(c) {
+            c.globalAlpha = 1;
             c.beginPath();
             c.fillStyle = this.color;
             c.rect(this.x - this.scale / 2, this.y - this.scale / 2, this.scale, this.scale);
@@ -34,6 +36,17 @@ export default {
             c.rect(this.x - this.scale / 5 - eyeScale / 2, this.y - this.scale / 5 - eyeScale / 2, eyeScale, eyeScale);
             c.rect(this.x + this.scale / 5 - eyeScale / 2, this.y - this.scale / 5 - eyeScale / 2, eyeScale, eyeScale);
             c.fill();
+
+            this.texts.forEach(function(text) {
+                c.globalAlpha = 1 - text.timeActive / 1000;
+                c.font = `${text.fontSize}px Arial`;
+                c.fillText(text.text, text.x, text.y - text.timeActive / 20);
+                if(text.subText) {
+                    c.font = `${text.subText.fontSize}px Arial`;
+                    c.fillText(text.subText.text, text.x, text.y + 20 - text.timeActive / 20);
+                }
+            });
+            c.globalAlpha = 1;
         };
         //checking collisions here. Only need to check bottom collision, because if the player falls down, theres nothing they can do anyway.
         //pretty much just checking if player is on top of the platform and its bottom part clips through the platform.
@@ -58,8 +71,6 @@ export default {
                     && this.x - this.scale / 2 <= buttons.positions[i].x + buttons.width / 2
                     && this.y + this.scale / 2 >= platDims.y - buttons.height
                     && this.prevY + this.scale / 2 <= platDims.y - buttons.height) {
-                        console.log(buttons);
-                        console.log(this.x, this.scale, buttons.positions[i].x, buttons.width);
                         buttons.positions[i].inactive = true;
                         return buttons.positions[i].id;
                     }
@@ -97,6 +108,16 @@ export default {
             //update positions by incrementing the velocities
             this.y += this.yVel;
             this.x += this.xVel;
-        };
+
+            for(let i = 0; i<this.texts.length; i++) {
+                this.texts[i].timeActive = Date.now() - this.texts[i].time;
+                if(this.texts[i].timeActive > 1000) 
+                    this.texts.splice(i, 1);
+            }
+
+        }
+        this.gainedPoints = function(points, sub) {
+            this.texts.push({text: points, fontSize: 40, time: Date.now(), timeActive: 0.0, x:this.x, y: this.y, subText: sub ? {text: "Test text", fontSize: 20} : null});
+        }
     }
 }

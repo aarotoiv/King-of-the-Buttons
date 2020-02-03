@@ -163,10 +163,11 @@ export default {
             }
         },
         youClicked(points) {
-            console.log(points);
+            this.players[this.you.socketId].gainedPoints(points, true);
             this.$set(this.listData[this.you.socketId], 'points', this.listData[this.you.socketId].points + points);
         },
         playerClicked(socketId, buttonId, points) {
+            this.players[socketId].gainedPoints(points, false);
             this.$set(this.listData[socketId], 'points', this.listData[socketId].points + points);
         },
         newButton(button) {
