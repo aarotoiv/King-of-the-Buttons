@@ -35,6 +35,7 @@ export default {
         }
     },
     created() {
+        this.world = World.newWorld();
         this.you.spawnX = Math.random() * 500 + 200;
 
 
@@ -81,8 +82,6 @@ export default {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         });
-        
-        this.world = World.newWorld();
 
         let canvas = document.getElementById("game-canvas");
         canvas.width = window.innerWidth;
@@ -104,14 +103,17 @@ export default {
             const player_arr = Object.values(this.players);
             let self = this;
             player_arr.forEach(function(player) {
-                player.checkCollisions(self.world.getPlatDims());
+                const buttonHit = player.checkCollisions(self.world.getPlatDims(), self.world.getButtons());
+                //const buttonHit = player.checkButtonHits(self.world.getButtons());
+                if(buttonHit) {
+                    console.log(buttonHit);
+                }
                 player.update();
                 player.draw(self.gameCanvas);
             });
-            this.world.update();
             this.world.draw(this.gameCanvas);
         },
-        youJoined(socketId, existingPlayers, color) {
+        youJoined(socketId, existingPlayers, color, buttons) {
             //create your player
             this.you.socketId = socketId;
             this.players[socketId] = Player.newPlayer(this.you.spawnX, this.you.spawnY, color);
@@ -124,6 +126,10 @@ export default {
                 this.players[keys[i]] = Player.newPlayer(values[i].x, values[i].y, values[i].color);
                 this.$set(this.listData, keys[i], {color: values[i].color, socketId: keys[i], exists: true});
             }
+            let self = this;
+            Object.values(buttons).forEach(function(button) {
+                self.world.newButton(button);
+            });
         },
         playerJoined(socketId, x, color) {
             this.players[socketId] = Player.newPlayer(x, 0, color);

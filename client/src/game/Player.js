@@ -38,7 +38,7 @@ export default {
         //checking collisions here. Only need to check bottom collision, because if the player falls down, theres nothing they can do anyway.
         //pretty much just checking if player is on top of the platform and its bottom part clips through the platform.
         //if the clip happens -> move the player back above the platform, set y-velocity to 0
-        this.checkCollisions = function(platDims) {
+        this.checkCollisions = function(platDims, buttons) {
             if(this.y + this.scale / 2 >= platDims.y
             && this.x + this.scale / 2 >= platDims.x 
             && this.x - this.scale / 2 <= platDims.x + platDims.w
@@ -51,7 +51,17 @@ export default {
             }
             else 
                 this.touches.bottom = false;
+
+            for(let i = 0; i<buttons.positions.length; i++) {
+                if(this.x + this.scale / 2 >= buttons.positions[i].x - buttons.width / 2
+                && this.x - this.scale / 2 <= buttons.positions[i].x + buttons.width / 2
+                && this.y + this.scale / 2 >= platDims.y - buttons.height
+                && this.prevY + this.scale / 2 <= platDims.y - buttons.height) 
+                    return buttons.positions[i].id;
+            }
+            return false;
         }
+
         //using temp value here because we want the velocity to be exactly 50, -50 or 0
         //eg. if player pressed both a and d keys down, the velocity ends up at 0
         this.velocityUpdate = function(right, left) {   

@@ -7,7 +7,7 @@ export default {
     },
     listeners(socket, youJoined, playerJoined, playerLeft, playerPositionUpdate, playerVelocityUpdate, playerJumpUpdate) {
         socket.on('youJoined', function(data) {
-            youJoined(data.id, data.existingPlayers, data.color);
+            youJoined(data.id, data.existingPlayers, data.color, data.buttons);
         });
         socket.on('playerJoined', function(data) {
             playerJoined(data.id, data.x, data.color);

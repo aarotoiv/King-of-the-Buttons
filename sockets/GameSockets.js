@@ -1,5 +1,11 @@
 const socket = require('socket.io');
+const crypto = require('crypto');
+
 let players = {};
+let buttons = {
+    n: 0,
+    spawns: {}
+};
 
 module.exports = {
     initSocket: function(server) {
@@ -8,6 +14,8 @@ module.exports = {
         const io = socket(server);
 
         const self = this;
+        
+        this.newButton(Math.random() * 500 + 200);
 
         io.on('connection', function(socket) {
             socket.on('join', function(data) {
@@ -17,7 +25,7 @@ module.exports = {
                     b: Math.random() * 255
                 };
 
-                socket.emit('youJoined', {id: socket.id, existingPlayers: players, color});
+                socket.emit('youJoined', {id: socket.id, existingPlayers: players, color, buttons: buttons.spawns});
                 socket.broadcast.emit('playerJoined', {id: socket.id, x: data.x, color});
 
                 self.newPlayer(socket.id, data.x, 0, color);
@@ -60,5 +68,10 @@ module.exports = {
             players[socketId].y = y;
         }
        
+    },
+    newButton: function(x) {
+        const id = crypto.randomBytes(10).toString('hex');
+        buttons.n++;
+        buttons.spawns[id] = {x, id};
     }
 };
