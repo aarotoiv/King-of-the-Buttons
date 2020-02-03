@@ -47,7 +47,8 @@ module.exports = {
 
 
             socket.on('buttonHit', function(data) {
-                const hitPoints = self.buttons.spawnPoints[data.id];
+                const hitPoints = buttons.spawnPoints[data.id];
+                console.log(hitPoints);
 
                 socket.broadcast.emit('buttonClicked', {id: data.id});
             });
@@ -81,6 +82,6 @@ module.exports = {
         const id = crypto.randomBytes(10).toString('hex');
         buttons.n++;
         buttons.spawns[id] = {x, id};
-        buttons.spawnPoints[id] = n;
+        buttons.spawnPoints[id] = buttons.n;
     }
 };
