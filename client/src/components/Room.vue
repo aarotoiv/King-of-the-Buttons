@@ -49,7 +49,8 @@ export default {
             this.playerVelocityUpdate,
             this.playerJumpUpdate,
             this.youClicked,
-            this.playerClicked
+            this.playerClicked,
+            this.newButton
         );
         SocketHandler.join(this.socket, this.you.spawnX);
     },
@@ -108,6 +109,7 @@ export default {
             player_arr.forEach(function(player, index) {
                 const buttonHit = player.checkCollisions(self.world.getPlatDims(), self.world.getButtons());
                 if(buttonHit && player_keys[index] === self.you.socketId) {
+                    console.log(buttonHit);
                     SocketHandler.buttonHit(self.socket, buttonHit);
                 }
                 player.update();
@@ -165,7 +167,10 @@ export default {
             this.$set(this.listData[this.you.socketId], 'points', this.listData[this.you.socketId].points + points);
         },
         playerClicked(socketId, buttonId, points) {
-            this.$set(this.listData[socketId], points, this.listData[socketId].points + points);
+            this.$set(this.listData[socketId], 'points', this.listData[socketId].points + points);
+        },
+        newButton(button) {
+            this.world.newButton(button);
         }
     },
     beforeDestroy() {

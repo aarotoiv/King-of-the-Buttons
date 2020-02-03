@@ -58,6 +58,8 @@ export default {
                     && this.x - this.scale / 2 <= buttons.positions[i].x + buttons.width / 2
                     && this.y + this.scale / 2 >= platDims.y - buttons.height
                     && this.prevY + this.scale / 2 <= platDims.y - buttons.height) {
+                        console.log(buttons);
+                        console.log(this.x, this.scale, buttons.positions[i].x, buttons.width);
                         buttons.positions[i].inactive = true;
                         return buttons.positions[i].id;
                     }

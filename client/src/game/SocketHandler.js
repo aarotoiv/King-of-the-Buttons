@@ -5,7 +5,7 @@ export default {
         const socket = io('http://localhost:5000');
         return socket;
     },
-    listeners(socket, youJoined, playerJoined, playerLeft, playerPositionUpdate, playerVelocityUpdate, playerJumpUpdate, youClicked, playerClicked) {
+    listeners(socket, youJoined, playerJoined, playerLeft, playerPositionUpdate, playerVelocityUpdate, playerJumpUpdate, youClicked, playerClicked, newButton) {
         socket.on('youJoined', function(data) {
             youJoined(data.id, data.existingPlayers, data.color, data.buttons, data.points);
         });
@@ -32,6 +32,9 @@ export default {
         });
         socket.on('playerClicked', function(data) {
             playerClicked(data.socketId, data.id, data.points);
+        });
+        socket.on('newButton', function(data) {
+            newButton(data.button);
         });
     },
     join(socket, spawnX) {

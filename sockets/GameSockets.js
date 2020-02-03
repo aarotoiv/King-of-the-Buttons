@@ -16,7 +16,7 @@ module.exports = {
 
         const self = this;
         
-        this.newButton(Math.random() * 500 + 200);
+
 
         io.on('connection', function(socket) {
             socket.on('join', function(data) {
@@ -25,7 +25,7 @@ module.exports = {
                     g: Math.random() * 255,
                     b: Math.random() * 255
                 };
-
+                self.newButton(Math.random() * 500 + 200);
                 const points = 20;
 
                 socket.emit('youJoined', {id: socket.id, existingPlayers: players, color, buttons: buttons.spawns, points});
@@ -59,6 +59,10 @@ module.exports = {
                     points += 5;
                 socket.emit('youClicked', {points});
                 socket.broadcast.emit('playerClicked', {socketId: socket.id, id: data.id, points});
+                
+                const button = self.newButton(Math.random() * 500 + 200);
+                socket.emit('newButton', {button});
+                socket.broadcast.emit('newButton', {button});
             });
 
             socket.on('leave', function(data) {
@@ -91,5 +95,7 @@ module.exports = {
         buttons.n++;
         buttons.spawns[id] = {x, id};
         buttons.spawnPoints[id] = buttons.n;
+
+        return buttons.spawns[id];
     }
 };
