@@ -42,5 +42,8 @@ export default {
     },
     jumpUpdate(socket) {
         socket.emit('jumpUpdate', {});
+    },
+    buttonHit(socket, id) {
+        socket.emit('buttonHit', {id});
     }
 }

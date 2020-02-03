@@ -4,7 +4,8 @@ const crypto = require('crypto');
 let players = {};
 let buttons = {
     n: 0,
-    spawns: {}
+    spawns: {},
+    spawnPoints: {}
 };
 
 module.exports = {
@@ -44,6 +45,13 @@ module.exports = {
                 socket.broadcast.emit('playerJump', {id: socket.id});
             });
 
+
+            socket.on('buttonHit', function(data) {
+                const hitPoints = self.buttons.spawnPoints[data.id];
+
+                socket.broadcast.emit('buttonClicked', {id: data.id});
+            });
+
             socket.on('leave', function(data) {
                 socket.broadcast.emit('playerLeft', {id: socket.id});
                 self.removePlayer(socket.id);
@@ -73,5 +81,6 @@ module.exports = {
         const id = crypto.randomBytes(10).toString('hex');
         buttons.n++;
         buttons.spawns[id] = {x, id};
+        buttons.spawnPoints[id] = n;
     }
 };

@@ -100,12 +100,13 @@ export default {
     methods: {
         updateFrame() {
             this.gameCanvas.clearRect(0, 0, window.innerWidth, window.innerHeight);
+            const player_keys = Object.keys(this.players);
             const player_arr = Object.values(this.players);
             let self = this;
-            player_arr.forEach(function(player) {
+            player_arr.forEach(function(player, index) {
                 const buttonHit = player.checkCollisions(self.world.getPlatDims(), self.world.getButtons());
-                if(buttonHit) {
-                    console.log(buttonHit);
+                if(buttonHit && player_keys[index] === self.you.socketId) {
+                    SocketHandler.buttonHit(self.socket, buttonHit);
                 }
                 player.update();
                 player.draw(self.gameCanvas);
