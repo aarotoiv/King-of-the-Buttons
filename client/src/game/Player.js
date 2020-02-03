@@ -44,10 +44,10 @@ export default {
             && this.x - this.scale / 2 <= platDims.x + platDims.w
             && this.prevY + this.scale / 2 <= platDims.y) 
             {
-                    this.y -= (this.y + this.scale / 2) - platDims.y; 
-                    this.touches.bottom = true;
-                    if(this.yVel > 0)
-                        this.yVel = 0;
+                this.y -= (this.y + this.scale / 2) - platDims.y; 
+                this.touches.bottom = true;
+                if(this.yVel > 0)
+                    this.yVel = 0;
             }
             else 
                 this.touches.bottom = false;

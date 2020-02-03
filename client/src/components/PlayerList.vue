@@ -27,7 +27,7 @@
     #player-list {
         animation: player-list-entry 0.5s ease-in-out;
         position:absolute;
-        /*CSS HACKS*/
+        /*inline-block for automatic width*/
         display:inline-block;
         left:10px;
         top:10px;
