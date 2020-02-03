@@ -5,12 +5,12 @@ export default {
         const socket = io('http://localhost:5000');
         return socket;
     },
-    listeners(socket, youJoined, playerJoined, playerLeft, playerPositionUpdate, playerVelocityUpdate, playerJumpUpdate) {
+    listeners(socket, youJoined, playerJoined, playerLeft, playerPositionUpdate, playerVelocityUpdate, playerJumpUpdate, youClicked, playerClicked) {
         socket.on('youJoined', function(data) {
-            youJoined(data.id, data.existingPlayers, data.color, data.buttons);
+            youJoined(data.id, data.existingPlayers, data.color, data.buttons, data.points);
         });
         socket.on('playerJoined', function(data) {
-            playerJoined(data.id, data.x, data.color);
+            playerJoined(data.id, data.x, data.color, data.points);
         });
         socket.on('youLeft', function() {
             console.log("YOU HAVE LEFT");
@@ -26,6 +26,12 @@ export default {
         });
         socket.on('playerJump', function(data) {
             playerJumpUpdate(data.id);
+        });
+        socket.on('youClicked', function(data) {
+            youClicked(data.points);
+        });
+        socket.on('playerClicked', function(data) {
+            playerClicked(data.socketId, data.id, data.points);
         });
     },
     join(socket, spawnX) {

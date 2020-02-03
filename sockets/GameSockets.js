@@ -26,10 +26,12 @@ module.exports = {
                     b: Math.random() * 255
                 };
 
-                socket.emit('youJoined', {id: socket.id, existingPlayers: players, color, buttons: buttons.spawns});
-                socket.broadcast.emit('playerJoined', {id: socket.id, x: data.x, color});
+                const points = 20;
 
-                self.newPlayer(socket.id, data.x, 0, color);
+                socket.emit('youJoined', {id: socket.id, existingPlayers: players, color, buttons: buttons.spawns, points});
+                socket.broadcast.emit('playerJoined', {id: socket.id, x: data.x, color, points});
+
+                self.newPlayer(socket.id, data.x, 0, color, points);
             });
 
             socket.on('positionUpdate', function(data) {
@@ -47,10 +49,16 @@ module.exports = {
 
 
             socket.on('buttonHit', function(data) {
-                const hitPoints = buttons.spawnPoints[data.id];
-                console.log(hitPoints);
-
-                socket.broadcast.emit('buttonClicked', {id: data.id});
+                const hitN = buttons.spawnPoints[data.id];
+                let points = -1;
+                if(hitN % 500 == 0) 
+                    points += 250;
+                else if(hitN % 100 == 0)       
+                    points += 40;
+                else if(hitN % 10 == 0) 
+                    points += 5;
+                socket.emit('youClicked', {points});
+                socket.broadcast.emit('playerClicked', {socketId: socket.id, id: data.id, points});
             });
 
             socket.on('leave', function(data) {
@@ -65,8 +73,8 @@ module.exports = {
         });
 
     },
-    newPlayer: function(socketId, x, y, color) {
-        players[socketId] = {x, y, color};
+    newPlayer: function(socketId, x, y, color, points) {
+        players[socketId] = {x, y, color, points};
     },
     removePlayer: function(socketId) {
         delete players[socketId];

@@ -3,6 +3,7 @@
         <ul id="player-list-inner">
             <ol class="player-list-line" v-for="item in players" v-bind:key="item.socketId" v-bind:class="{removed: !item.exists}">
                 <div class="player-color" v-bind:style="{background: 'rgb(' + item.color.r + ',' + item.color.g + ',' + item.color.b + ')'}"></div>
+                <span class="player-points">{{item.points}}</span>
                 <span class="player-name">{{item.socketId}}</span>
             </ol>
         </ul>
@@ -75,6 +76,12 @@
         width: 25px;
         height: 25px;
         float:left;
+    }
+    .player-points {
+        float:left;
+        line-height: 25px;
+        padding-left: 5px;
+        color: #fff;
     }
     .player-name {
         padding-left: 10px;

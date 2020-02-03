@@ -47,7 +47,9 @@ export default {
             this.playerLeft,
             this.playerPositionUpdate,
             this.playerVelocityUpdate,
-            this.playerJumpUpdate
+            this.playerJumpUpdate,
+            this.youClicked,
+            this.playerClicked
         );
         SocketHandler.join(this.socket, this.you.spawnX);
     },
@@ -113,27 +115,27 @@ export default {
             });
             this.world.draw(this.gameCanvas);
         },
-        youJoined(socketId, existingPlayers, color, buttons) {
+        youJoined(socketId, existingPlayers, color, buttons, points) {
             //create your player
             this.you.socketId = socketId;
             this.players[socketId] = Player.newPlayer(this.you.spawnX, this.you.spawnY, color);
 
-            this.$set(this.listData, socketId, {color, socketId, exists:true});
+            this.$set(this.listData, socketId, {color, socketId, exists:true, points});
 
             const keys = Object.keys(existingPlayers);
             const values = Object.values(existingPlayers);
             for(let i = 0; i<keys.length; i++) {
                 this.players[keys[i]] = Player.newPlayer(values[i].x, values[i].y, values[i].color);
-                this.$set(this.listData, keys[i], {color: values[i].color, socketId: keys[i], exists: true});
+                this.$set(this.listData, keys[i], {color: values[i].color, socketId: keys[i], exists: true, points: values[i].points});
             }
             let self = this;
             Object.values(buttons).forEach(function(button) {
                 self.world.newButton(button);
             });
         },
-        playerJoined(socketId, x, color) {
+        playerJoined(socketId, x, color, points) {
             this.players[socketId] = Player.newPlayer(x, 0, color);
-            this.$set(this.listData, socketId, {color, socketId, exists: true});
+            this.$set(this.listData, socketId, {color, socketId, exists: true, points});
         },
         playerLeft(socketId) {
             delete this.players[socketId];
@@ -157,6 +159,13 @@ export default {
             if(this.players[socketId]) {
                 this.players[socketId].jump();
             }
+        },
+        youClicked(points) {
+            console.log(points);
+            this.$set(this.listData[this.you.socketId], 'points', this.listData[this.you.socketId].points + points);
+        },
+        playerClicked(socketId, buttonId, points) {
+            this.$set(this.listData[socketId], points, this.listData[socketId].points + points);
         }
     },
     beforeDestroy() {
