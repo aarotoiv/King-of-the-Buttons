@@ -30,10 +30,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.get('/', function(req, res) {
-    console.log("ROUTE SES");
-    console.log(req.session);
-    req.session.views ? req.session.views++ : req.session.views = 1;
-    console.log("ROUTE SES ENDS");
     res.send({success: true});
 });
 
