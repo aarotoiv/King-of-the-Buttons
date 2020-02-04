@@ -15,7 +15,7 @@ module.exports = {
         const io = socket(server);
 
         io.use(function(socket, next) {
-            session(socket.request, socket.request.res, next);
+            session(socket.request, {}, next);
         });
         
         const self = this;
@@ -23,18 +23,17 @@ module.exports = {
 
 
         io.on('connection', function(socket) {
-            if(socket.request.session.views)
-                socket.request.session.views++;
-            else
-                socket.request.session.views = 1;
-            
-                console.log(socket.request.session);
-            socket.on('join', function(data) {
-                const color = {
+            if(!socket.request.session.color) {
+                socket.request.session.color = {
                     r: Math.random() * 255,
                     g: Math.random() * 255,
                     b: Math.random() * 255
-                };
+                }
+            }
+            socket.request.session.save();
+            
+            socket.on('join', function(data) {
+                const color = socket.request.session.color;
 
                 if(Object.keys(buttons.spawns).length == 0) 
                     self.newButton(Math.random() * 500 + 200);

@@ -4,7 +4,7 @@ import axios from 'axios';
 export default {
     async initialize() {
         const res = await axios.get('http://localhost:5000/', {withCredentials: true});
-        const socket = await io('http://localhost:5000');
+        const socket = await io('http://localhost:5000', {withCredentials: true});
         console.log(res);
         console.log("socket initialized");
         return socket;
