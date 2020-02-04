@@ -1,8 +1,12 @@
 import io from 'socket.io-client';
+import axios from 'axios';
 
 export default {
-    initialize() {
-        const socket = io('http://localhost:5000');
+    async initialize() {
+        const res = await axios.get('http://localhost:5000/', {withCredentials: true});
+        const socket = await io('http://localhost:5000');
+        console.log(res);
+        console.log("socket initialized");
         return socket;
     },
     listeners(socket, youJoined, playerJoined, playerLeft, playerPositionUpdate, playerVelocityUpdate, playerJumpUpdate, youClicked, playerClicked, newButton) {

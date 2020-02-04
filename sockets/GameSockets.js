@@ -9,22 +9,33 @@ let buttons = {
 };
 
 module.exports = {
-    initSocket: function(server) {
+    initSocket: function(server, session) {
         console.log("socket running");
 
         const io = socket(server);
 
+        io.use(function(socket, next) {
+            session(socket.request, socket.request.res, next);
+        });
+        
         const self = this;
         
 
 
         io.on('connection', function(socket) {
+            if(socket.request.session.views)
+                socket.request.session.views++;
+            else
+                socket.request.session.views = 1;
+            
+                console.log(socket.request.session);
             socket.on('join', function(data) {
                 const color = {
                     r: Math.random() * 255,
                     g: Math.random() * 255,
                     b: Math.random() * 255
                 };
+
                 if(Object.keys(buttons.spawns).length == 0) 
                     self.newButton(Math.random() * 500 + 200);
                 const points = 20;

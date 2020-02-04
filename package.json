@@ -16,6 +16,8 @@
     "concurrently": "^5.1.0",
     "cors": "*",
     "express": "*",
+    "express-session": "^1.17.0",
+    "memorystore": "^1.6.1",
     "morgan": "*",
     "nodemon": "^2.0.2",
     "socket.io": "^2.3.0"

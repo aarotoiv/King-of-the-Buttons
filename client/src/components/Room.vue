@@ -38,21 +38,26 @@ export default {
         this.world = World.newWorld();
         this.you.spawnX = Math.random() * 500 + 200;
 
+        let self = this;
+        SocketHandler.initialize()
+        .then(function(res) {
+            self.socket = res;
+            console.log(res);
+            SocketHandler.listeners(
+                self.socket,
+                self.youJoined,
+                self.playerJoined,
+                self.playerLeft,
+                self.playerPositionUpdate,
+                self.playerVelocityUpdate,
+                self.playerJumpUpdate,
+                self.youClicked,
+                self.playerClicked,
+                self.newButton
+            );
+            SocketHandler.join(self.socket, self.you.spawnX);
+        });
 
-        this.socket = SocketHandler.initialize();
-        SocketHandler.listeners(
-            this.socket,
-            this.youJoined,
-            this.playerJoined,
-            this.playerLeft,
-            this.playerPositionUpdate,
-            this.playerVelocityUpdate,
-            this.playerJumpUpdate,
-            this.youClicked,
-            this.playerClicked,
-            this.newButton
-        );
-        SocketHandler.join(this.socket, this.you.spawnX);
     },
     mounted() {
         let self = this;
