@@ -109,7 +109,6 @@ export default {
             player_arr.forEach(function(player, index) {
                 const buttonHit = player.checkCollisions(self.world.getPlatDims(), self.world.getButtons());
                 if(buttonHit && player_keys[index] === self.you.socketId) {
-                    console.log(buttonHit);
                     SocketHandler.buttonHit(self.socket, buttonHit);
                 }
                 player.update();
