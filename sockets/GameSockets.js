@@ -31,7 +31,7 @@ module.exports = {
                 }
             }
             socket.request.session.save();
-            
+
             socket.on('join', function(data) {
                 const color = socket.request.session.color;
 
@@ -73,6 +73,7 @@ module.exports = {
                     socket.broadcast.emit('playerClicked', {socketId: socket.id, id: data.id, points});
                     
                     self.deleteButton(data.id);
+                    self.playerPoints(socket.id, points);
     
                     const button = self.newButton(Math.random() * 500 + 200);
                     socket.emit('newButton', {button});
@@ -83,11 +84,15 @@ module.exports = {
             socket.on('leave', function(data) {
                 socket.broadcast.emit('playerLeft', {id: socket.id});
                 self.removePlayer(socket.id);
+                console.log(ses);
+                console.log(socket.request.session);
             }); 
 
             socket.on('disconnect', function(data) {
                 socket.broadcast.emit('playerLeft', {id: socket.id});
                 self.removePlayer(socket.id);
+                console.log("ses");
+                console.log(socket.request.session);
             });
         });
 
@@ -104,6 +109,9 @@ module.exports = {
             players[socketId].y = y;
         }
        
+    },
+    playerPoints: function(socketId, amount) {
+        players[socketId].points += amount;
     },
     newButton: function(x) {
         const id = crypto.randomBytes(10).toString('hex');
