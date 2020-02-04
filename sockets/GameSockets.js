@@ -29,20 +29,23 @@ module.exports = {
                     g: Math.random() * 255,
                     b: Math.random() * 255
                 }
+                socket.request.session.save();
             }
-            socket.request.session.save();
+            if(!socket.request.session.points) {
+                socket.request.session.points = 20;
+                socket.request.session.save();
+            }
 
             socket.on('join', function(data) {
                 const color = socket.request.session.color;
 
                 if(Object.keys(buttons.spawns).length == 0) 
                     self.newButton(Math.random() * 500 + 200);
-                const points = 20;
 
-                socket.emit('youJoined', {id: socket.id, existingPlayers: players, color, buttons: buttons.spawns, points});
-                socket.broadcast.emit('playerJoined', {id: socket.id, x: data.x, color, points});
+                socket.emit('youJoined', {id: socket.id, existingPlayers: players, color, buttons: buttons.spawns, points: socket.request.session.points});
+                socket.broadcast.emit('playerJoined', {id: socket.id, x: data.x, color, points: socket.request.session.points});
 
-                self.newPlayer(socket.id, data.x, 0, color, points);
+                self.newPlayer(socket.id, data.x, 0, color, socket.request.session.points);
             });
 
             socket.on('positionUpdate', function(data) {
@@ -83,16 +86,20 @@ module.exports = {
 
             socket.on('leave', function(data) {
                 socket.broadcast.emit('playerLeft', {id: socket.id});
+                if(players[socket.id]) {
+                    socket.request.session.points = players[socket.id].points;
+                    socket.request.session.save();
+                }
                 self.removePlayer(socket.id);
-                console.log(ses);
-                console.log(socket.request.session);
             }); 
 
             socket.on('disconnect', function(data) {
                 socket.broadcast.emit('playerLeft', {id: socket.id});
+                if(players[socket.id]) {
+                    socket.request.session.points = players[socket.id].points;
+                    socket.request.session.save();
+                }
                 self.removePlayer(socket.id);
-                console.log("ses");
-                console.log(socket.request.session);
             });
         });
 
