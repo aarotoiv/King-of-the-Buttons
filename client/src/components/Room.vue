@@ -20,6 +20,7 @@ export default {
         return {
             you: {
                 socketId: null,
+                points: 0,
                 spawnX: 0,
                 spawnY: 0
             },
@@ -42,7 +43,6 @@ export default {
         SocketHandler.initialize()
         .then(function(res) {
             self.socket = res;
-            console.log(res);
             SocketHandler.listeners(
                 self.socket,
                 self.youJoined,
@@ -126,6 +126,7 @@ export default {
             this.you.socketId = socketId;
             this.players[socketId] = Player.newPlayer(this.you.spawnX, this.you.spawnY, color);
 
+            this.$set(this.you, 'points', points);
             this.$set(this.listData, socketId, {color, socketId, exists:true, points});
 
             const keys = Object.keys(existingPlayers);
@@ -168,7 +169,9 @@ export default {
         },
         youClicked(points) {
             this.players[this.you.socketId].gainedPoints(points, true);
+            this.$set(this.you, 'points', this.you.points + points);
             this.$set(this.listData[this.you.socketId], 'points', this.listData[this.you.socketId].points + points);
+            console.log(this.you.points);
         },
         playerClicked(socketId, buttonId, points) {
             this.players[socketId].gainedPoints(points, false);
