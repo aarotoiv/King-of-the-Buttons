@@ -72,7 +72,9 @@ module.exports = {
                         points += 40;
                     else if(hitN % 10 == 0) 
                         points += 5;
-                    socket.emit('youClicked', {points});
+
+                    const hitsTillPrize = hitN % 10 != 0 ? 10 - hitN % 10 : 0;
+                    socket.emit('youClicked', {points, hitsTillPrize});
                     socket.broadcast.emit('playerClicked', {socketId: socket.id, id: data.id, points});
                     
                     self.deleteButton(data.id);

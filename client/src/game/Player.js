@@ -43,7 +43,7 @@ export default {
                 c.fillText(text.text, text.x, text.y - text.timeActive / 20);
                 if(text.subText) {
                     c.font = `${text.subText.fontSize}px Arial`;
-                    c.fillText(text.subText.text, text.x, text.y + 20 - text.timeActive / 20);
+                    c.fillText(text.subText.text, text.x - 40, text.y + 20 - text.timeActive / 20);
                 }
             });
             c.globalAlpha = 1;
@@ -117,7 +117,18 @@ export default {
 
         }
         this.gainedPoints = function(points, sub) {
-            this.texts.push({text: points, fontSize: 40, time: Date.now(), timeActive: 0.0, x:this.x, y: this.y, subText: sub ? {text: "Test text", fontSize: 20} : null});
+            this.texts.push({
+                text: points > 0 ? `+${points}` : points,
+                fontSize: 40,
+                time: Date.now(),
+                timeActive: 0.0,
+                x:this.x,
+                y: this.y,
+                subText: sub ? {
+                    text: `Prize in ${sub} hits.`,
+                    fontSize: 20
+                } : null
+            });
         }
     }
 }

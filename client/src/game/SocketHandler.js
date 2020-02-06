@@ -32,7 +32,7 @@ export default {
             playerJumpUpdate(data.id);
         });
         socket.on('youClicked', function(data) {
-            youClicked(data.points);
+            youClicked(data.points, data.hitsTillPrize);
         });
         socket.on('playerClicked', function(data) {
             playerClicked(data.socketId, data.id, data.points);

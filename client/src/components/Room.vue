@@ -167,11 +167,10 @@ export default {
                 this.players[socketId].jump();
             }
         },
-        youClicked(points) {
-            this.players[this.you.socketId].gainedPoints(points, true);
+        youClicked(points, hitsTillPrize) {
+            this.players[this.you.socketId].gainedPoints(points, hitsTillPrize);
             this.$set(this.you, 'points', this.you.points + points);
             this.$set(this.listData[this.you.socketId], 'points', this.listData[this.you.socketId].points + points);
-            console.log(this.you.points);
         },
         playerClicked(socketId, buttonId, points) {
             this.players[socketId].gainedPoints(points, false);
