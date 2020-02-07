@@ -2,6 +2,7 @@
   <div id="home">
    <p id="home-title">King of the Buttons</p>
    <input type="text" id="player-name" placeholder="Name.." @change="nameChanged">
+   <button type="button" @click="go">Go game</button>
   </div>
 </template>
 
@@ -16,7 +17,10 @@ export default {
   methods: {
     nameChanged(elem) {
       this.$set(this, 'playerName', elem.target.value);
-      console.log(this.playerName);
+    },
+    go() {
+      console.log(this.$router);
+      this.$router.push({ name: 'RoomView', params: { userName: this.playerName, roomId: "asdf" } })
     }
   }
 }
@@ -46,6 +50,7 @@ export default {
     border:none;
     border-bottom: solid 5px #fff;
     color: #fff;
+    text-align:center;
   }
   #player-name::placeholder {
     color: #fff;
