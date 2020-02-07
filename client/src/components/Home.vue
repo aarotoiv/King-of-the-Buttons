@@ -35,5 +35,20 @@ export default {
     text-align:center;
     font-size: 50px;
   }
+  #player-name {
+    width: 500px;
+    height: 75px;
+    display:block;
+    margin: 100px auto;
+    font-size: 40px;
+    padding: 0px 10px 0px 10px;
+    background: #000;
+    border:none;
+    border-bottom: solid 5px #fff;
+    color: #fff;
+  }
+  #player-name::placeholder {
+    color: #fff;
+  }
 </style>
 
