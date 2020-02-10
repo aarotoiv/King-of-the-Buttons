@@ -19,7 +19,6 @@ export default {
       this.$set(this, 'playerName', elem.target.value);
     },
     go() {
-      console.log(this.$router);
       this.$router.push({ name: 'RoomView', params: { userName: this.playerName, roomId: "asdf" } })
     }
   }

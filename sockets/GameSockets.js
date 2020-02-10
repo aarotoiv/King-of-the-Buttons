@@ -37,15 +37,28 @@ module.exports = {
             }
 
             socket.on('join', function(data) {
+                let userName = "";
+                if(socket.request.session.userName)
+                    userName = socket.request.session.userName;
+                else {
+                    if(data.userName) {
+                        socket.request.session.userName = data.userName;
+                        socket.request.session.save();
+                        userName = data.userName;
+                    }
+                    else 
+                        userName = socket.id;
+                }
+
                 const color = socket.request.session.color;
 
                 if(Object.keys(buttons.spawns).length == 0) 
                     self.newButton(Math.random() * 500 + 200);
 
-                socket.emit('youJoined', {id: socket.id, existingPlayers: players, color, buttons: buttons.spawns, points: socket.request.session.points});
-                socket.broadcast.emit('playerJoined', {id: socket.id, x: data.x, color, points: socket.request.session.points});
+                socket.emit('youJoined', {id: socket.id, userName, existingPlayers: players, color, buttons: buttons.spawns, points: socket.request.session.points});
+                socket.broadcast.emit('playerJoined', {id: socket.id, userName, x: data.x, color, points: socket.request.session.points});
 
-                self.newPlayer(socket.id, data.x, 0, color, socket.request.session.points);
+                self.newPlayer(socket.id, userName, data.x, 0, color, socket.request.session.points);
             });
 
             socket.on('positionUpdate', function(data) {
@@ -106,8 +119,8 @@ module.exports = {
         });
 
     },
-    newPlayer: function(socketId, x, y, color, points) {
-        players[socketId] = {x, y, color, points};
+    newPlayer: function(socketId, userName, x, y, color, points) {
+        players[socketId] = {userName, x, y, color, points};
     },
     removePlayer: function(socketId) {
         delete players[socketId];
@@ -116,8 +129,7 @@ module.exports = {
         if(players[socketId]) {
             players[socketId].x = x;
             players[socketId].y = y;
-        }
-       
+        } 
     },
     playerPoints: function(socketId, amount) {
         players[socketId].points += amount;

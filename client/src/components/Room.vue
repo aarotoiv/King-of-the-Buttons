@@ -20,6 +20,7 @@ export default {
         return {
             you: {
                 socketId: null,
+                userName: "",
                 points: 0,
                 spawnX: 0,
                 spawnY: 0
@@ -36,28 +37,27 @@ export default {
         }
     },
     created() {
-        this.world = World.newWorld();
-        this.you.spawnX = Math.random() * 500 + 200;
-
         let self = this;
-        SocketHandler.initialize()
-        .then(function(res) {
-            self.socket = res;
-            SocketHandler.listeners(
-                self.socket,
-                self.youJoined,
-                self.playerJoined,
-                self.playerLeft,
-                self.playerPositionUpdate,
-                self.playerVelocityUpdate,
-                self.playerJumpUpdate,
-                self.youClicked,
-                self.playerClicked,
-                self.newButton
-            );
-            SocketHandler.join(self.socket, self.you.spawnX);
-        });
+        
+        if(this.$route.params.userName) {
+            this.you.userName = this.$route.params.userName;
+            self.initializeSockets();
+        } else {
+            SocketHandler.getExistingUser()
+            .then(function(res) {
+                console.log(res);
+                if(res) {
+                    self.you.userName = res;
+                    self.initializeSockets();
+                } else 
+                    self.$router.push({name: "Home", params: {}});
+            })
+            .catch(function(err) {
+                console.log(err);
+            });
+        }
 
+        this.world = World.newWorld();
     },
     mounted() {
         let self = this;
@@ -106,6 +106,27 @@ export default {
         }, 1000); 
     },
     methods: {
+        initializeSockets() {
+            this.you.spawnX = Math.random() * 500 + 200;
+            let self = this;
+            SocketHandler.initialize()
+            .then(function(res) {
+                self.socket = res;
+                SocketHandler.listeners(
+                    self.socket,
+                    self.youJoined,
+                    self.playerJoined,
+                    self.playerLeft,
+                    self.playerPositionUpdate,
+                    self.playerVelocityUpdate,
+                    self.playerJumpUpdate,
+                    self.youClicked,
+                    self.playerClicked,
+                    self.newButton
+                );
+                SocketHandler.join(self.socket, self.you.userName, self.you.spawnX);
+            });
+        },
         updateFrame() {
             this.gameCanvas.clearRect(0, 0, window.innerWidth, window.innerHeight);
             const player_keys = Object.keys(this.players);
@@ -121,28 +142,28 @@ export default {
             });
             this.world.draw(this.gameCanvas);
         },
-        youJoined(socketId, existingPlayers, color, buttons, points) {
+        youJoined(socketId, userName, existingPlayers, color, buttons, points) {
             //create your player
             this.you.socketId = socketId;
             this.players[socketId] = Player.newPlayer(this.you.spawnX, this.you.spawnY, color);
 
             this.$set(this.you, 'points', points);
-            this.$set(this.listData, socketId, {color, socketId, exists:true, points});
+            this.$set(this.listData, socketId, {userName, color, socketId, exists:true, points});
 
             const keys = Object.keys(existingPlayers);
             const values = Object.values(existingPlayers);
             for(let i = 0; i<keys.length; i++) {
                 this.players[keys[i]] = Player.newPlayer(values[i].x, values[i].y, values[i].color);
-                this.$set(this.listData, keys[i], {color: values[i].color, socketId: keys[i], exists: true, points: values[i].points});
+                this.$set(this.listData, keys[i], {userName: values[i].userName, color: values[i].color, socketId: keys[i], exists: true, points: values[i].points});
             }
             let self = this;
             Object.values(buttons).forEach(function(button) {
                 self.world.newButton(button);
             });
         },
-        playerJoined(socketId, x, color, points) {
+        playerJoined(socketId, userName, x, color, points) {
             this.players[socketId] = Player.newPlayer(x, 0, color);
-            this.$set(this.listData, socketId, {color, socketId, exists: true, points});
+            this.$set(this.listData, socketId, {userName, color, socketId, exists: true, points});
         },
         playerLeft(socketId) {
             delete this.players[socketId];

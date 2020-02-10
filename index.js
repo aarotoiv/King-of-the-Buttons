@@ -32,6 +32,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.get('/', function(req, res) {
     res.send({success: true});
 });
+app.get('/existing_user', function(req, res) {
+    res.send({userName: req.session.userName});
+});
 
 const port = process.env.PORT || 5000;
 

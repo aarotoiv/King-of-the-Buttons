@@ -2,6 +2,10 @@ import io from 'socket.io-client';
 import axios from 'axios';
 
 export default {
+    async getExistingUser() {
+        const res = await axios.get('http://localhost:5000/existing_user', {withCredentials: true});
+        return res.data.userName;
+    },
     async initialize() {
         const res = await axios.get('http://localhost:5000/', {withCredentials: true});
         console.log(res);
@@ -11,10 +15,10 @@ export default {
     },
     listeners(socket, youJoined, playerJoined, playerLeft, playerPositionUpdate, playerVelocityUpdate, playerJumpUpdate, youClicked, playerClicked, newButton) {
         socket.on('youJoined', function(data) {
-            youJoined(data.id, data.existingPlayers, data.color, data.buttons, data.points);
+            youJoined(data.id, data.userName, data.existingPlayers, data.color, data.buttons, data.points);
         });
         socket.on('playerJoined', function(data) {
-            playerJoined(data.id, data.x, data.color, data.points);
+            playerJoined(data.id, data.userName, data.x, data.color, data.points);
         });
         socket.on('youLeft', function() {
             console.log("YOU HAVE LEFT");
@@ -41,8 +45,8 @@ export default {
             newButton(data.button);
         });
     },
-    join(socket, spawnX) {
-        socket.emit('join', {x: spawnX});
+    join(socket, userName, spawnX) {
+        socket.emit('join', {userName, x: spawnX});
     },
     leave(socket) {
         socket.emit('leave', {});

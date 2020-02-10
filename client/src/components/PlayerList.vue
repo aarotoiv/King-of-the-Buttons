@@ -4,7 +4,7 @@
             <ol class="player-list-line" v-for="item in players" v-bind:key="item.socketId" v-bind:class="{removed: !item.exists}">
                 <div class="player-color" v-bind:style="{background: 'rgb(' + item.color.r + ',' + item.color.g + ',' + item.color.b + ')'}"></div>
                 <span class="player-points">{{item.points}}</span>
-                <span class="player-name">{{item.socketId}}</span>
+                <span class="player-name">{{item.userName}}</span>
             </ol>
         </ul>
     </div>
