@@ -2,7 +2,7 @@
   <div id="home">
    <p id="home-title">King of the Buttons</p>
    <input type="text" id="player-name" placeholder="Name.." @change="nameChanged">
-   <button type="button" @click="go">Go game</button>
+   <button id="go-button" type="button" @click="go">Go game</button>
    <div id="home-error-box" v-if="hasError"> 
     <p id="home-error-text">
       {{errorText}}
@@ -67,6 +67,18 @@ export default {
   }
   #player-name::placeholder {
     color: #fff;
+  }
+  #go-button {
+    width: 200px;
+    height: 50px;
+    display:block;
+    margin: 0 auto;
+    font-size: 20px;
+  }
+  #home-error-text {
+    color: red;
+    text-align:center;
+    padding-top: 50px;
   }
 </style>
 
