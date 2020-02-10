@@ -77,7 +77,7 @@ export default {
 
         this.updateLoop = setInterval(() => {
             if(self.players[self.you.socketId]) 
-                SocketHandler.posUpdate(self.socket, self.players[self.you.socketId].x, self.players[self.you.socketId].y);
+                SocketHandler.posUpdate(self.socket, self.players[self.you.socketId].getX(), self.players[self.you.socketId].getY());
         }, 1000); 
     },
     methods: {
@@ -186,10 +186,9 @@ export default {
             }, 500);
         },
         playerPositionUpdate(socketId, x, y) {
-            if(this.players[socketId]) {
-                this.players[socketId].x = x;
-                this.players[socketId].y = y;
-            }
+            if(this.players[socketId]) 
+                this.players[socketId].syncPos(x, y);
+            
         },
         playerVelocityUpdate(socketId, right, left) {
             if(this.players[socketId])

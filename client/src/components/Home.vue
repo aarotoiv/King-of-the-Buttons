@@ -1,34 +1,55 @@
 <template>
   <div id="home">
-   <p id="home-title">King of the Buttons</p>
-   <input type="text" id="player-name" placeholder="Name.." @change="nameChanged">
-   <button id="go-button" type="button" @click="go">Go game</button>
-   <div id="home-error-box" v-if="hasError"> 
-    <p id="home-error-text">
-      {{errorText}}
+    <p id="loader" v-if="loading">
+      LOADING
     </p>
-   </div>
+    <div id="home-content" v-else>
+      <p id="home-title">King of the Buttons</p>
+      <input type="text" id="player-name" placeholder="Name.." @change="nameChanged">
+      <button id="go-button" type="button" @click="go">Go game</button>
+      <div id="home-error-box" v-if="hasError"> 
+        <p id="home-error-text">
+          {{errorText}}
+        </p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import SocketHandler from '../game/SocketHandler';
+
 export default {
   name: 'Home',
   data() {
     return {
       playerName: "",
       hasError: false,
-      errorText: ""
+      errorText: "",
+      loading: false
     }
   },
   created() {
+      let self = this;
+
       if(this.$route.params.error) {
         this.hasError = true;
         this.$set(this, 'errorText', this.$route.params.error);
-      } 
+      } else {
+        this.$set(this, 'loading', true);
+        SocketHandler.getExistingUser()
+        .then(function(res) {
+          if(res)
+            self.$router.push({name: 'RoomView', params: {userName: res, roomId: "asdf"}});
+          else 
+            self.$set(self, 'loading', false);
+        })
+        .catch(function(err) {
+          console.log(err);
+        });
+      }
   },
   methods: {
-    
     nameChanged(elem) {
       this.$set(this, 'playerName', elem.target.value);
     },
@@ -79,6 +100,27 @@ export default {
     color: red;
     text-align:center;
     padding-top: 50px;
+  }
+  #loader {
+    position:absolute;
+    left: calc(50% - 100px);
+    top: calc(50% - 50px);
+    text-align:center;
+    width: 200px;
+    height: 100px;
+    line-height: 100px;
+    color: #fff;
+    font-size: 40px;
+    animation: loader-spin 3s linear infinite;
+  }
+  @keyframes loader-spin {
+    from {transform:rotate(0deg);}
+    to {transform: rotate(360deg);}
+  }
+  #home-content {
+    position:relative;
+    width: 100%;
+    height: 100%;
   }
 </style>
 

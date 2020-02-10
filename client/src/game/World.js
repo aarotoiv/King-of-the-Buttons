@@ -1,21 +1,23 @@
+import {graphicMod as gM } from './util';
+
 export default {
     newWorld() {
         return new this.World();
     },  
     World() {
         this.platform = {
-            x: 200,
-            y: 800,
-            w: 1800,
-            h: 5 
+            x: 200 * gM(),
+            y: 800 * gM(),
+            w: 2160 * gM(),
+            h: 5 * gM() 
         };
         this.button = {
-            width: 80,
-            height: 25,
+            width: 80 * gM(),
+            height: 25 * gM(),
             positions: []
         };
 
-        this.draw = function(c) {
+        this.draw = function(c) { 
             for(let i = 0; i<this.button.positions.length; i++) {
                 if(!this.button.positions[i].inactive) {
                     c.beginPath();
@@ -31,7 +33,8 @@ export default {
         }
 
         this.newButton = function(button) {
-            this.button.positions.push(button);
+            const newX = button.x * gM();
+            this.button.positions.push({x: newX, id: button.id});
         }
 
         this.getPlatDims = function() {

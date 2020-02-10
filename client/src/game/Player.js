@@ -1,20 +1,22 @@
+import {graphicMod as gM } from './util';
+
 export default {
     newPlayer(x, y, color) {
         return new this.Player(x, y, color);
     },  
     Player(x, y, color) {
         //some initializer values for the player
-        this.x = x;
-        this.y = y;
+        this.x = x * gM();
+        this.y = y * gM();
         this.prevX = 0;
         this.prevY = 0;
-        this.scale = 70;
+        this.scale = 70 * gM();
         this.color = `rgb(${color.r}, ${color.g}, ${color.b})`;
-        this.baseVel = 10;
+        this.baseVel = 10 * gM();
         this.xVel = 0;
         this.yVel = 0;
-        this.baseYAccel = 2;
-        this.yVelCap = 16;
+        this.baseYAccel = 2 * gM();
+        this.yVelCap = 16 * gM();
         this.touches = {
             bottom: false,
             right: false,
@@ -40,10 +42,10 @@ export default {
             this.texts.forEach(function(text) {
                 c.globalAlpha = 1 - text.timeActive / 1000;
                 c.font = `${text.fontSize}px Arial`;
-                c.fillText(text.text, text.x, text.y - text.timeActive / 20);
+                c.fillText(text.text, text.x, text.y - text.timeActive / 20 * gM());
                 if(text.subText) {
                     c.font = `${text.subText.fontSize}px Arial`;
-                    c.fillText(text.subText.text, text.x - 40, text.y + 20 - text.timeActive / 20);
+                    c.fillText(text.subText.text, text.x - 40 * gM(), text.y + 20 * gM() - text.timeActive / 20 * gM());
                 }
             });
             c.globalAlpha = 1;
@@ -92,7 +94,7 @@ export default {
         //ran when player hits spacebar
         this.jump = function() {
             if(this.touches.bottom)
-                this.yVel = -30;
+                this.yVel = -30 * gM();
         }
         this.update = function() { 
             //update prevX and prevY
@@ -119,16 +121,26 @@ export default {
         this.gainedPoints = function(points, sub) {
             this.texts.push({
                 text: points > 0 ? `+${points}` : points,
-                fontSize: 40,
+                fontSize: 40 * gM(),
                 time: Date.now(),
                 timeActive: 0.0,
                 x:this.x,
                 y: this.y,
                 subText: sub ? {
                     text: `Prize in ${sub} hits.`,
-                    fontSize: 20
+                    fontSize: 20 * gM()
                 } : null
             });
+        }
+        this.getX = function() {
+            return this.x / gM();
+        }
+        this.getY = function() {
+            return this.y / gM();
+        }
+        this.syncPos = function(x, y) {
+            this.x = x * gM();
+            this.y = y * gM();
         }
     }
 }
