@@ -45,7 +45,6 @@ export default {
         } else {
             SocketHandler.getExistingUser()
             .then(function(res) {
-                console.log(res);
                 if(res) {
                     self.you.userName = res;
                     self.initializeSockets();
@@ -115,6 +114,11 @@ export default {
             let canvas = document.getElementById("game-canvas");
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            this.world.onResize();
+            let players = Object.values(this.players);
+            for(let i = 0; i<players.length; i++) {
+                players[i].onResize();
+            }
         },
 
 

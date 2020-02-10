@@ -44,6 +44,20 @@ export default {
         this.getButtons = function() {
             return this.button;
         }
+
+        this.onResize = function() {
+            this.platform = {
+                x: 200 * gM(),
+                y: 800 * gM(),
+                w: 2160 * gM(),
+                h: 5 * gM() 
+            };
+            this.button = {
+                width: 80 * gM(),
+                height: 25 * gM(),
+                positions: []
+            };
+        }
     }
 
 }

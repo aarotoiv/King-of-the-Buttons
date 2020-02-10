@@ -142,5 +142,13 @@ export default {
             this.x = x * gM();
             this.y = y * gM();
         }
+        this.onResize = function() {
+            this.x = window.innerWidth / 2;
+            this.y = 0;
+            this.scale = 70 * gM();
+            this.baseVel = 10 * gM();
+            this.baseYAccel = 2 * gM();
+            this.yVelCap = 16 * gM();
+        }
     }
 }
