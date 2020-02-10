@@ -61,35 +61,10 @@ export default {
     },
     mounted() {
         let self = this;
-        window.addEventListener('keydown', event => {
-            if(event.keyCode === 68) 
-                self.keys.right = true;
-            else if(event.keyCode === 65) 
-                self.keys.left = true; 
-            
-            if(self.you.socketId && self.players[self.you.socketId])
-                self.players[self.you.socketId].velocityUpdate(self.keys.right, self.keys.left);
-            SocketHandler.velUpdate(self.socket, self.keys.right, self.keys.left);
-            
-            if(event.keyCode === 32) {
-                self.players[self.you.socketId].jump();
-                SocketHandler.jumpUpdate(self.socket);
-            }
-        }); 
-        window.addEventListener('keyup', event => {
-            if(event.keyCode === 68)
-                self.keys.right = false;
-            else if(event.keyCode === 65)
-                self.keys.left = false;
-            if(self.you.socketId && self.players[self.you.socketId])
-                self.players[self.you.socketId].velocityUpdate(self.keys.right, self.keys.left);
-            SocketHandler.velUpdate(self.socket, self.keys.right, self.keys.left);
-        });
-        window.addEventListener('resize', () => {
-            let canvas = document.getElementById("game-canvas");
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+
+        window.addEventListener('keydown', this.handleKeyDown); 
+        window.addEventListener('keyup', this.handleKeyUp);
+        window.addEventListener('resize', this.handleResize);
 
         let canvas = document.getElementById("game-canvas");
         canvas.width = window.innerWidth;
@@ -106,6 +81,43 @@ export default {
         }, 1000); 
     },
     methods: {
+        handleKeyDown(event) {
+            if(this.socket) {
+                if(event.keyCode === 68) 
+                this.keys.right = true;
+                else if(event.keyCode === 65) 
+                    this.keys.left = true; 
+                
+                if(this.you.socketId && this.players[this.you.socketId])
+                    this.players[this.you.socketId].velocityUpdate(this.keys.right, this.keys.left);
+                SocketHandler.velUpdate(this.socket, this.keys.right, this.keys.left);
+                
+                if(event.keyCode === 32) {
+                    this.players[this.you.socketId].jump();
+                    SocketHandler.jumpUpdate(this.socket);
+                }
+            }
+        },
+        handleKeyUp(event) {
+            if(this.socket) {
+                if(event.keyCode === 68)
+                    this.keys.right = false;
+                else if(event.keyCode === 65)
+                    this.keys.left = false;
+                if(this.you.socketId && this.players[this.you.socketId])
+                    this.players[this.you.socketId].velocityUpdate(this.keys.right, this.keys.left);
+
+                SocketHandler.velUpdate(this.socket, this.keys.right, this.keys.left);
+            }
+           
+        },
+        handleResize() {
+            let canvas = document.getElementById("game-canvas");
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        },
+
+
         initializeSockets() {
             this.you.spawnX = Math.random() * 500 + 200;
             let self = this;
@@ -204,11 +216,11 @@ export default {
     beforeDestroy() {
         clearInterval(this.canvasLoop);
         clearInterval(this.updateLoop);
-        window.removeEventListener('keydown');
-        window.removeEventListener('keyup');
-        window.removeEventListener('resize');
-
-        SocketHandler.leave(this.socket);
+        window.removeEventListener('keydown', this.handleKeyDown);
+        window.removeEventListener('keyup', this.handleKeyUp);
+        window.removeEventListener('resize', this.handleResize);
+        if(this.socket)
+            SocketHandler.leave(this.socket);
     }
     
 }
