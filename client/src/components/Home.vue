@@ -3,6 +3,11 @@
    <p id="home-title">King of the Buttons</p>
    <input type="text" id="player-name" placeholder="Name.." @change="nameChanged">
    <button type="button" @click="go">Go game</button>
+   <div id="home-error-box" v-if="hasError"> 
+    <p id="home-error-text">
+      {{errorText}}
+    </p>
+   </div>
   </div>
 </template>
 
@@ -11,10 +16,19 @@ export default {
   name: 'Home',
   data() {
     return {
-      playerName: ""
+      playerName: "",
+      hasError: false,
+      errorText: ""
     }
   },
+  created() {
+      if(this.$route.params.error) {
+        this.hasError = true;
+        this.$set(this, 'errorText', this.$route.params.error);
+      } 
+  },
   methods: {
+    
     nameChanged(elem) {
       this.$set(this, 'playerName', elem.target.value);
     },

@@ -50,7 +50,7 @@ export default {
                     self.you.userName = res;
                     self.initializeSockets();
                 } else 
-                    self.$router.push({name: "Home", params: {}});
+                    self.$router.push({name: "Home", params: {error: "You need to insert a username."}});
             })
             .catch(function(err) {
                 console.log(err);
