@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import axios from 'axios';
 
-const URI = 'http://kingofbuttons.herokuapp.com';//http://localhost:5000';
+const URI = '';//'http://kingofbuttons.herokuapp.com';//http://localhost:5000';
 
 export default {
     async getExistingUser() {

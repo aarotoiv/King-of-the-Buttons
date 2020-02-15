@@ -8,7 +8,8 @@
     "client": "npm run serve --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start index.js"
+    "start": "node index.js",
+    "stop": "pm2 stop all"
   },
   "author": "",
   "license": "ISC",
