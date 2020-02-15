@@ -7,7 +7,8 @@
     "server": "nodemon --ignore 'client/*' index.js",
     "client": "npm run serve --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm run build --prefix client pm2 start index.js"
   },
   "author": "",
   "license": "ISC",
@@ -20,6 +21,7 @@
     "memorystore": "^1.6.1",
     "morgan": "*",
     "nodemon": "^2.0.2",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.3.0",
+    "pm2": "*"
   }
 }

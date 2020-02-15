@@ -1,15 +1,17 @@
 import io from 'socket.io-client';
 import axios from 'axios';
 
+const URI = 'http://kingofbuttons.herokuapp.com';//http://localhost:5000';
+
 export default {
     async getExistingUser() {
-        const res = await axios.get('http://localhost:5000/existing_user', {withCredentials: true});
+        const res = await axios.get(URI + '/existing_user', {withCredentials: true});
         return res.data.userName;
     },
     async initialize() {
-        const res = await axios.get('http://localhost:5000/', {withCredentials: true});
+        const res = await axios.get(URI + '/', {withCredentials: true});
         console.log(res);
-        const socket = await io('http://localhost:5000', {withCredentials: true});
+        const socket = await io(URI, {withCredentials: true});
         console.log("socket initialized");
         return socket;
     },
