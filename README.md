@@ -3,6 +3,7 @@ Not yet fully functional.
 ## What
 Game based on the original idea of ["simple clicker game"](https://github.com/aarotoiv/click). \
 Instead of clicking a button, the player controls a block of a varying color. \
+You and other players are also able to see each other. \
 <img src="./assets/thing.gif?raw=true" title="Demo of the game" width=800>
 
 ## Usage
